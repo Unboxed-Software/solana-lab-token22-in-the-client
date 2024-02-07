@@ -1,6 +1,4 @@
 import {
-	ASSOCIATED_TOKEN_PROGRAM_ID,
-	AccountLayout,
 	TOKEN_2022_PROGRAM_ID,
 	createMint,
 	getOrCreateAssociatedTokenAccount,
@@ -9,11 +7,13 @@ import {
 import {Cluster, Connection, Keypair, PublicKey} from '@solana/web3.js'
 import {getMintInfo} from './infoHelper'
 
-const createAndFetchToken22 = async (
+const createAndMintToken22 = async (
 	cluster: Cluster,
 	connection: Connection,
 	keyPair: Keypair
 ) => {
+	console.log('\n---Using Token-2022 Program---\n')
+	console.log('\nCreating a new mint...')
 	const mint = await createMint(
 		connection,
 		keyPair,
@@ -30,8 +30,10 @@ const createAndFetchToken22 = async (
 		`You can view your token in the solana explorer at https://explorer.solana.com/address/${mint.toBase58()}?cluster=${cluster}`
 	)
 
+	console.log('\nFetching mint info...')
 	await getMintInfo(connection, mint, true)
 
+	console.log('\nCreating associated token account...')
 	const tokenAccount = await getOrCreateAssociatedTokenAccount(
 		connection,
 		keyPair,
@@ -45,6 +47,7 @@ const createAndFetchToken22 = async (
 
 	console.log(`Associated token account: ${tokenAccount.address.toBase58()}`)
 
+	console.log('\nMinting to associated token account...')
 	await mintTo(
 		connection,
 		keyPair,
@@ -52,28 +55,13 @@ const createAndFetchToken22 = async (
 		tokenAccount.address,
 		keyPair,
 		100000000000,
-		undefined,
+		[keyPair],
 		{commitment: 'finalized'},
 		TOKEN_2022_PROGRAM_ID
 	)
 
+	console.log('\nGetting mint info to check supply...')
 	await getMintInfo(connection, mint, true)
-
-	const tokenAccountsByOwner = await connection.getTokenAccountsByOwner(
-		keyPair.publicKey,
-		{programId: TOKEN_2022_PROGRAM_ID}
-	)
-
-	console.log('\nToken                                         Balance')
-	console.log('------------------------------------------------------------')
-	tokenAccountsByOwner.value.forEach((tokenAccount) => {
-		const accountData = AccountLayout.decode(tokenAccount.account.data)
-		console.log(
-			`${new PublicKey(accountData.mint)}   ${accountData.amount}`
-		)
-	})
-
-	console.log()
 }
 
-export default createAndFetchToken22
+export default createAndMintToken22
