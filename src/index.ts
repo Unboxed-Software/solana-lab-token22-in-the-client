@@ -1,9 +1,10 @@
 import {Cluster, Connection, clusterApiUrl} from '@solana/web3.js'
 import {initializeKeypair} from './keypair-helpers'
-import createAndMintToken from './create-and-mint-token'
+import createAndMintToken, { getMintInfo } from './create-and-mint-token'
 import printTableData from './print-helpers'
 import { TOKEN_2022_PROGRAM_ID, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { TokenInfoForDisplay, fetchTokenInfo, fetchTokenProgramFromAccount } from './fetch-token-info'
+import burnAllTokensInAccount from './burn-tokens'
 
 const CLUSTER: Cluster = 'devnet'
 
@@ -13,7 +14,8 @@ async function main() {
 	 * Create a connection and initialize a keypair if one doesn't already exists.
 	 * If a keypair exists, airdrop a sol if needed.
 	 */
-	const connection = new Connection(clusterApiUrl(CLUSTER))
+	// const connection = new Connection(clusterApiUrl(CLUSTER))
+	const connection = new Connection('http://127.0.0.1:8899')
 	const keyPair = await initializeKeypair(connection)
 
 	console.log(`public key: ${keyPair.publicKey.toBase58()}`)
@@ -51,6 +53,21 @@ async function main() {
 	)
 
 	printTableData(myTokens)
+
+	
+	/**
+	 * Burn all of our newly minted tokens from both mints and show the supply of both mints
+	 */
+	await burnAllTokensInAccount(connection, TOKEN_PROGRAM_ID, keyPair, regularMint);
+	await burnAllTokensInAccount(connection, TOKEN_2022_PROGRAM_ID, keyPair, token22Mint);
+
+	const mintsToShow = [];
+	mintsToShow.push(
+		await getMintInfo(connection, regularMint, TOKEN_PROGRAM_ID),
+		await getMintInfo(connection, token22Mint, TOKEN_2022_PROGRAM_ID),
+	)
+
+	printTableData(mintsToShow);
 	
 }
 
