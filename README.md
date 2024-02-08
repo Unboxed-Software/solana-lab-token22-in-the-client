@@ -1,9 +1,4 @@
-# Review Notes
+# To get started
 
-- functions that stand alone should have `function` instead of `const functionName = () => {}`
-- 
-  
-# Starter Branch
-- initializeKeypair.ts file
-- Maybe ( infoHelper.ts )
-- 
+1. install packages `npm install`
+2. run `npm run start`
