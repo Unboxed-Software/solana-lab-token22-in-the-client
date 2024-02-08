@@ -1,10 +1,4 @@
-import {
-	AccountLayout,
-	TOKEN_2022_PROGRAM_ID,
-	TOKEN_PROGRAM_ID,
-	getMint,
-} from '@solana/spl-token'
-import {Connection, Keypair, LAMPORTS_PER_SOL, PublicKey} from '@solana/web3.js'
+import { PublicKey } from '@solana/web3.js'
 
 function printTableData(obj: Object){
 	let tableData: any = []
@@ -17,8 +11,8 @@ function printTableData(obj: Object){
 				Object.keys(currentValue).map((key) => {
 					let nestedValue = (currentValue as any)[key]
 					if (nestedValue instanceof PublicKey) {
-						nestedValue = (nestedValue as PublicKey).toBase58()
-						;(currentValue as any)[key] = nestedValue
+						nestedValue = (nestedValue as PublicKey).toBase58();
+						(currentValue as any)[key] = nestedValue
 					}
 				})
 				tableData.push(currentValue)
