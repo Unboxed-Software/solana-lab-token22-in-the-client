@@ -1,9 +1,7 @@
-# Review Notes
+# Getting Started
+To install dependencies and run the script, run the following commands
+```bash
+npm install
+npm run start
 
-- functions that stand alone should have `function` instead of `const functionName = () => {}`
-- 
-  
-# Starter Branch
-- initializeKeypair.ts file
-- Maybe ( infoHelper.ts )
-- 
+```
