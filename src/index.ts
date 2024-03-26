@@ -9,9 +9,9 @@ async function main() {
 	 * If a keypair exists, airdrop a sol if needed.
 	 */
 	const connection = new Connection(clusterApiUrl(CLUSTER))
-	const keyPair = await initializeKeypair(connection)
+	const payer = await initializeKeypair(connection)
 
-	console.log(`public key: ${keyPair.publicKey.toBase58()}`)
+	console.log(`Payer: ${payer.publicKey.toBase58()}`)
 }
 
 main()
