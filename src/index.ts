@@ -8,6 +8,8 @@ import {
 	fetchTokenInfo,
 	fetchTokenProgramFromAccount,
 } from './fetch-token-info'
+import dotenv from 'dotenv'
+dotenv.config()
 
 const CLUSTER: Cluster = 'devnet'
 
