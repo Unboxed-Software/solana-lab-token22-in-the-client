@@ -1,32 +1,29 @@
 import { PublicKey } from '@solana/web3.js'
 
-function printTableData(obj: Object){
+function printTableData(obj: Object) {
 	let tableData: any = []
 
-	if (obj instanceof Array) {
-		Object.keys(obj).map((key) => {
-			let currentValue = (obj as any)[key]
+	const formatPublicKey = (key: PublicKey) => `${key.toBase58().substring(0, 4)}...${key.toBase58().slice(-4)}`;
 
-			if (currentValue instanceof Object) {
-				Object.keys(currentValue).map((key) => {
-					let nestedValue = (currentValue as any)[key]
-					if (nestedValue instanceof PublicKey) {
-						nestedValue = (nestedValue as PublicKey).toBase58();
-						(currentValue as any)[key] = nestedValue
-					}
-				})
-				tableData.push(currentValue)
+	const processObject = (currentValue: any) => {
+		Object.keys(currentValue).forEach((key) => {
+			let value = currentValue[key];
+			if (value instanceof PublicKey) {
+				value = formatPublicKey(value);
+			} else if (value instanceof Object) {
+				value = processObject(value); // Recursively format nested objects
 			}
-		})
+			currentValue[key] = value;
+		});
+		return currentValue;
+	};
+
+	if (Array.isArray(obj)) {
+		obj.forEach((item) => {
+			tableData.push(processObject({ ...item }));
+		});
 	} else {
-		Object.keys(obj).map((key) => {
-			let currentValue = (obj as any)[key]
-			if (currentValue instanceof PublicKey) {
-				currentValue = (currentValue as PublicKey).toBase58()
-				;(obj as any)[key] = currentValue
-			}
-		})
-		tableData.push(obj)
+		tableData.push(processObject({ ...obj }));
 	}
 
 	console.table(tableData);
