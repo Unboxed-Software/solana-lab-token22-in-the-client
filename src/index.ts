@@ -1,19 +1,11 @@
-import {initializeKeypair} from '@solana-developers/helpers'
-import {Cluster, Connection, clusterApiUrl} from '@solana/web3.js'
-import dotenv from 'dotenv'
-dotenv.config()
+import { initializeKeypair } from '@solana-developers/helpers'
+import { Connection } from '@solana/web3.js'
 
-const CLUSTER: Cluster = 'devnet'
-
-async function main() {
+(async () => {
 	/**
 	 * Create a connection and initialize a keypair if one doesn't already exists.
 	 * If a keypair exists, airdrop a sol if needed.
 	 */
-	const connection = new Connection(clusterApiUrl(CLUSTER))
+	const connection = new Connection("http://127.0.0.1:8899", { commitment: 'finalized' })
 	const payer = await initializeKeypair(connection)
-
-	console.log(`Payer: ${payer.publicKey.toBase58()}`)
-}
-
-main()
+})()
