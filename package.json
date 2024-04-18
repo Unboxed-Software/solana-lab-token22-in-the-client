@@ -5,7 +5,7 @@
 	"main": "index.ts",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"start": "ts-node src/index.ts"
+		"start": "npx esrun src/index.ts"
 	},
 	"devDependencies": {
 		"@types/bn.js": "^5.1.0",
@@ -24,7 +24,8 @@
 		"@solana/spl-token": "^0.4.0",
 		"@solana/web3.js": "^1.53.0",
 		"@typescript-eslint/parser": "^6.20.0",
-		"eslint": "^8.56.0"
+		"eslint": "^8.56.0",
+		"esrun": "^3.2.26"
 	},
 	"author": "",
 	"license": "ISC"
